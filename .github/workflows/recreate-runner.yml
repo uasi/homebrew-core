@@ -1,0 +1,43 @@
+name: Recreate Linux self-hosted runner on schedule
+
+# Uncomment and use this code below once this is ready:
+# on:
+#   workflow_dispatch:
+#   schedule:
+#     # Once each 24 hours, at 1 during the night
+#     - cron: "0 0 1 1/1 *"
+
+on: pull_request
+
+jobs:
+  recreate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - run: npm install @octokit/action
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      - name: Wait for idle runner
+        id: killable
+        env:
+          GITHUB_TOKEN: ${{ secrets.HOMEBREW_GITHUB_PUBLIC_REPO_TOKEN }}
+          RUNNER_NAME: linux-self-hosted-1
+          REPO_NAME: ${{ github.event.repository.full_name }}
+        run: |
+          result=$(node .github/actions/wait-for-idle-runner.js)
+          echo "$result"
+      - name: Kill runner and create a new one
+        if: ${{ steps.killable.outputs.result == 'true' }}
+        run: bash .github/scripts/create_gcloud_instance.sh
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.HOMEBREW_GITHUB_PUBLIC_REPO_TOKEN }}
