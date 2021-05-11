@@ -24,8 +24,8 @@ if [ ! -d "/home/actions" ]; then
     newgrp docker
     systemctl restart docker
 
-    curl -o install_runner.sh https://raw.githubusercontent.com/Homebrew/actions/master/create-gcloud-instance/install_runner.sh
-    curl -o config_runner.sh https://raw.githubusercontent.com/Homebrew/actions/master/create-gcloud-instance/config_runner.sh
+    su -c "curl -o install_runner.sh https://raw.githubusercontent.com/Homebrew/actions/master/create-gcloud-instance/install_runner.sh" actions
+    su -c "curl -o config_runner.sh https://raw.githubusercontent.com/Homebrew/actions/master/create-gcloud-instance/config_runner.sh" actions
 
     # This needs to be run with the actions user:
     su -c "./install_runner.sh" actions
@@ -37,6 +37,6 @@ if [ ! -d "/home/actions" ]; then
     RUNNER_NAME=$RUNNER_NAME VM_TOKEN=$VM_TOKEN su -c "./config_runner.sh" actions
 fi
 
-curl -o start_runner.sh https://raw.githubusercontent.com/Homebrew/actions/master/create-gcloud-instance/start_runner.sh
+su -c "curl -o start_runner.sh https://raw.githubusercontent.com/Homebrew/actions/master/create-gcloud-instance/start_runner.sh" actions
 
 su -p -c "./start_runner.sh" actions
