@@ -24,19 +24,22 @@ if [ ! -d "/home/actions" ]; then
     newgrp docker
     systemctl restart docker
 
-    su -c "curl -o install_runner.sh https://raw.githubusercontent.com/Homebrew/actions/master/create-gcloud-instance/install_runner.sh" actions
-    su -c "curl -o config_runner.sh https://raw.githubusercontent.com/Homebrew/actions/master/create-gcloud-instance/config_runner.sh" actions
+    curl -o /home/actions/install_runner.sh https://raw.githubusercontent.com/Homebrew/actions/master/create-gcloud-instance/install_runner.sh
+    curl -o /home/actions/config_runner.sh https://raw.githubusercontent.com/Homebrew/actions/master/create-gcloud-instance/config_runner.sh
+    chmod +x /home/actions/install_runner.sh
+    chmod +x /home/actions/config_runner.sh
 
     # This needs to be run with the actions user:
-    su -c "./install_runner.sh" actions
+    su -c "/home/actions/install_runner.sh" actions
 
     # This needs to be run as root:
     source /home/actions/actions-runner/bin/installdependencies.sh
 
     # This needs to be run with the actions user:
-    RUNNER_NAME=$RUNNER_NAME VM_TOKEN=$VM_TOKEN su -c "./config_runner.sh" actions
+    RUNNER_NAME=$RUNNER_NAME VM_TOKEN=$VM_TOKEN su -c "/home/actions/config_runner.sh" actions
 fi
 
-su -c "curl -o start_runner.sh https://raw.githubusercontent.com/Homebrew/actions/master/create-gcloud-instance/start_runner.sh" actions
+curl -o start_runner.sh https://raw.githubusercontent.com/Homebrew/actions/master/create-gcloud-instance/start_runner.sh
+chmod +x /home/actions/start_runner.sh
 
-su -p -c "./start_runner.sh" actions
+su -p -c "/home/actions/start_runner.sh" actions
