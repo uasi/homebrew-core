@@ -5,7 +5,7 @@ VM_TOKEN=$(curl --silent -X POST -H "authorization: token ${HOMEBREW_GITHUB_API_
 
 RUNNER_NAME=linux-self-hosted-1
 GCLOUD_SCOPES="https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append"
-GCLOUD_IMAGE="ubuntu-1804-bionic-v20210323"
+GCLOUD_IMAGE="ubuntu-1804-bionic-v20210508"
 GCLOUD_ZONE="europe-west1-b"
 GCLOUD_MACHINE="e2-standard-2"
 GCLOUD_DISK_SIZE="30GB"
