@@ -25,16 +25,13 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
       - name: Wait for idle runner
-        id: killable
-        env:
-          GITHUB_TOKEN: ${{ secrets.HOMEBREW_GITHUB_PUBLIC_REPO_TOKEN }}
-          RUNNER_NAME: linux-self-hosted-1
-          REPO_NAME: ${{ github.event.repository.full_name }}
-        run: |
-          result=$(node .github/actions/wait-for-idle-runner.js)
-          echo "$result"
+        uses: Homebrew/actions/wait-for-idle-runner@master
+        with:
+          github_token: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
+          runner_name: linux-self-hosted-1
+          repo_name: ${{ github.event.repository.full_name }}
       - name: Kill runner and create a new one
-        if: ${{ steps.killable.outputs.result == 'true' }}
+        if: ${{ steps.killable.outputs.runner-found == 'true' && steps.killable.outputs.runner-idle == 'true' }}
         run: bash .github/scripts/create_gcloud_instance.sh
         env:
           GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
