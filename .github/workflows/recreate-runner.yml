@@ -30,6 +30,7 @@ jobs:
           github_token: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
           runner_name: linux-self-hosted-1
           repo_name: ${{ github.event.repository.full_name }}
+          id: killable
       - name: Kill runner and create a new one
         if: ${{ steps.killable.outputs.runner-found == 'true' && steps.killable.outputs.runner-idle == 'true' }}
         run: bash .github/scripts/create_gcloud_instance.sh
