@@ -28,7 +28,7 @@ jobs:
         id: killable
         uses: Homebrew/actions/wait-for-idle-runner@master
         with:
-          github_token: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
+          github_token: ${{ secrets.HOMEBREW_GITHUB_PUBLIC_REPO_TOKEN }}
           runner_name: linux-self-hosted-1
           repository_name: ${{ github.event.repository.full_name }}
       - name: Kill runner and create a new one
