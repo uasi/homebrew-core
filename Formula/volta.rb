@@ -37,6 +37,13 @@ class Volta < Formula
     (fish_completion/"volta.fish").write fish_output
   end
 
+  def caveats
+    <<~EOS
+      If you have already installed tools using Volta, you need to migrate them manually:
+        volta setup
+    EOS
+  end
+
   test do
     system "#{bin}/volta", "install", "node@12.16.1"
     node = shell_output("#{bin}/volta which node").chomp
