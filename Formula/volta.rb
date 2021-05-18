@@ -37,6 +37,19 @@ class Volta < Formula
     (fish_completion/"volta.fish").write fish_output
   end
 
+  def post_install
+    # Migrate ~/.volta only if exists.
+    system "#{bin}/volta-migrate", "--no-create"
+  end
+
+  def caveats
+    <<~EOS
+      If you have set $VOLTA_HOME to somewhere other than ~/.volta and have used Volta,
+      you need to run migration manually:
+        volta setup
+    EOS
+  end
+
   test do
     system "#{bin}/volta", "install", "node@12.16.1"
     node = shell_output("#{bin}/volta which node").chomp
